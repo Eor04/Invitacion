@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis XV Años | Luciana</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --pink-bg: #ffeaf0;
+            --gold: #ceaa5f;
+            --text-dark: #8c4a5c;
+            --text-light: #a86c7d;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--pink-bg);
+            background-image: radial-gradient(circle at top, #fff3f6 0%, #ffeaf0 100%);
+            color: var(--text-dark);
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        /* Marcos dorados estilo tarjeta */
+        .card {
+            background-color: var(--white);
+            margin: 50px auto;
+            max-width: 380px;
+            width: 90%;
+            padding: 40px 20px;
+            position: relative;
+            border: 2px solid var(--gold);
+            box-shadow: 0 10px 25px rgba(206, 170, 95, 0.15);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        /* Borde interior doble */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            border: 1px solid var(--gold);
+            pointer-events: none;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           NUEVO: ADORNOS DE FLORES TIPO LIANAS 
+           ========================================= */
+        .liana {
+            position: absolute;
+            width: 120px;
+            /* Tamaño de la liana, ajústalo si es muy grande */
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .liana-top {
+            top: -25px;
+            left: -25px;
+            transform: rotate(0deg);
+            /* Ajusta los grados si necesitas rotarla */
+        }
+
+        .liana-bottom {
+            bottom: -25px;
+            right: -25px;
+            transform: rotate(180deg);
+            /* Voltea la liana para la esquina inferior */
+        }
+
+        /* Tipografías */
+        h1,
+        h2,
+        .script-text {
+            font-family: 'Great Vibes', cursive;
+            color: var(--gold);
+            font-weight: normal;
+        }
+
+        .title-small {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin: 15px 0;
+            color: var(--gold);
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            text-transform: uppercase;
+        }
+
+        /* Botones con microanimaciones */
+        .btn {
+            display: inline-block;
+            background-color: var(--white);
+            color: var(--text-dark);
+            border: 1px solid var(--text-dark);
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .btn:hover {
+            background-color: var(--text-dark);
+            color: var(--white);
+            transform: scale(1.05);
+        }
+
+        .btn-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(140, 74, 92, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(140, 74, 92, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(140, 74, 92, 0);
+            }
+        }
+
+        /* Elementos específicos */
+        .photo-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            margin: 20px auto;
+            background-color: #f0f0f0;
+            background-image: url('D:\DATOS\Desktop\Invitacion Luciana\Luciana.png');
+            /* <-- PON AQUÍ LA FOTO DE LA QUINCEAÑERA */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .date-number {
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
+            color: var(--gold);
+            line-height: 1;
+            margin: 10px 0;
+        }
+
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .time-box {
+            text-align: center;
+        }
+
+        .time-box span {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--text-dark);
+        }
+
+        .time-box p {
+            font-size: 0.6rem;
+            margin: 0;
+        }
+
+        .dress-code-icons {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0;
+            font-size: 2.5rem;
+            color: var(--text-dark);
+        }
+
+        .color-palette {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .color-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+        }
+
+        .c-pink {
+            background-color: #fcd5ce;
+        }
+
+        .c-white {
+            background-color: #ffffff;
+        }
+
+        .c-purple {
+            background-color: #e8dff5;
+        }
+
+        /* =========================================
+           NUEVO: ESTILO PARA LA FOTO DEL QR 
+           ========================================= */
+        .qr-image {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border: 3px solid var(--gold);
+            border-radius: 10px;
+            margin: 15px auto;
+            display: block;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PORTADA -->
+    <div class="card visible">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+
+        <p class="title-small">MIS XV AÑOS</p>
+        <h1>Luciana</h1>
+        <h1>Orihuela Roca</h1>
+        <div class="photo-circle"></div>
+    </div>
+
+    <!-- PADRES -->
+    <div class="card">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+
+        <p style="position: relative; z-index: 5;">Hoy queda en el recuerdo mi niñez, pero hoy renazco para vivir el
+            momento más feliz de mi vida: mi adolescencia.</p>
+        <p style="position: relative; z-index: 5;">Con el cariño de mis padres:</p>
+        <h2 style="font-size: 2rem; margin-top: 20px; position: relative; z-index: 5;">Everty Orihuela Roca</h2>
+        <h2 style="font-size: 2rem; position: relative; z-index: 5;">& </h2>
+        <h2 style="font-size: 2rem; position: relative; z-index: 5;">Patricia Roca Flores</h2>
+        <p style="margin-top: 20px; position: relative; z-index: 5;">Quisiera que estés junto a mi para que compartamos
+            mis 15 años</p>
+    </div>
+
+    <!-- RECEPCIÓN -->
+    <div class="card">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+
+        <h2 class="script-text">Recepción</h2>
+        <p>DOMINGO</p>
+        <div class="date-number">05</div>
+        <p>DE JULIO</p>
+        <p style="margin-top:20px; font-weight: bold; color: var(--gold); font-size: 1.2rem;">19:30 Hrs.</p>
+        <p style="margin-top:10px;">MI DOMICILIO PARTICULAR</p>
+
+        <a href="https://maps.app.goo.gl/MtyRykohnLVXHeMm7" target="_blank" class="btn btn-pulse">
+            <i class="fas fa-map-marker-alt"></i> Ver Ubicación
+        </a>
+    </div>
+
+    <!-- CUENTA REGRESIVA -->
+    <div class="card">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+
+        <h2 class="script-text">Faltan</h2>
+        <div class="countdown-container">
+            <div class="time-box"><span id="days">00</span>
+                <p>DÍAS</p>
+            </div>
+            <div class="time-box"><span id="hours">00</span>
+                <p>HORAS</p>
+            </div>
+            <div class="time-box"><span id="mins">00</span>
+                <p>MINUTOS</p>
+            </div>
+            <div class="time-box"><span id="secs">00</span>
+                <p>SEGUNDOS</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VESTIMENTA -->
+    <div class="card">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+
+        <h2 class="script-text">Código de Vestimenta</h2>
+        <p class="title-small">FORMAL</p>
+        <div class="dress-code-icons">
+            <div><i class="fas fa-user-tie"></i>
+                <p style="font-size: 0.6rem; margin-top:5px;">GUAPOS</p>
+            </div>
+            <div><i class="fas fa-female"></i>
+                <p style="font-size: 0.6rem; margin-top:5px;">DIVINAS</p>
+            </div>
+        </div>
+        <p style="font-size: 0.7rem;">COLORES RESERVADOS PARA LA QUINCEAÑERA:</p>
+        <div class="color-palette">
+            <div class="color-circle c-pink"></div>
+            <div class="color-circle c-white"></div>
+            <div class="color-circle c-purple"></div>
+        </div>
+    </div>
+
+    <!-- SUGERENCIA DE REGALO CON FOTO QR -->
+    <div class="card">
+        <img src="D:\DATOS\Desktop\Invitacion Luciana\Liana.png" class="liana liana-top" alt="">
+        <img src="D:\DATOS\Desktop\Invitacion Luciana\Liana.png" class="liana liana-bottom" alt="">
+
+        <i class="fas fa-gift"
+            style="font-size: 2rem; color: var(--gold); margin-bottom: 10px; position: relative; z-index: 5;"></i>
+        <h2 class="script-text" style="position: relative; z-index: 5;">Sugerencia de regalo</h2>
+        <p style="position: relative; z-index: 5;">Tu presencia es mi mejor regalo, pero si deseas darme un obsequio
+            contaremos con lluvia de sobres y transferencia QR.</p>
+
+        <!-- AQUÍ VA TU IMAGEN DEL QR -->
+        <img src="D:\DATOS\Desktop\Invitacion Luciana\Qr.png" alt="Código QR para regalos" class="qr-image">
+    </div>
+
+    <!-- CONFIRMACIÓN -->
+    <div class="card">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
+        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+
+        <i class="fab fa-whatsapp"
+            style="font-size: 2.5rem; color: var(--gold); margin-bottom: 10px; position: relative; z-index: 5;"></i>
+        <h2 class="script-text" style="position: relative; z-index: 5;">Confirmación</h2>
+        <p style="position: relative; z-index: 5;">de asistencia</p>
+        <a href="https://wa.me/59176861386?text=¡Hola!%20Confirmo%20mi%20asistencia%20a%20los%20XV%20de%20Luciana"
+            target="_blank" class="btn btn-pulse" style="margin-bottom: 20px;">
+            CONFIRMAR
+        </a>
+        <p style="color: var(--gold); font-weight: bold; position: relative; z-index: 5;">TU PRESENCIA HARÁ MI DÍA MÁS
+            ESPECIAL</p>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        });
+        document.querySelectorAll('.card').forEach(card => observer.observe(card));
+
+        const countDownDate = new Date("Jul 5, 2026 19:30:00").getTime();
+
+        setInterval(function () {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            if (distance > 0) {
+                document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                document.getElementById("mins").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                document.getElementById("secs").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+            }
+        }, 1000);
+    </script>
+</body>
+
+</html>
