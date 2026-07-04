@@ -34,6 +34,23 @@
             overflow-x: hidden;
         }
 
+        /* Partículas flotantes de fondo */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes floatParticle {
+            0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+            10%  { opacity: 0.6; }
+            90%  { opacity: 0.3; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
         /* Marcos dorados estilo tarjeta */
         .card {
             background-color: var(--white);
@@ -45,8 +62,11 @@
             border: 2px solid var(--gold);
             box-shadow: 0 10px 25px rgba(206, 170, 95, 0.15);
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
+            transform: translateY(40px) scale(0.97);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.4s ease;
+            overflow: visible;
         }
 
         /* Borde interior doble */
@@ -59,36 +79,54 @@
             bottom: 6px;
             border: 1px solid var(--gold);
             pointer-events: none;
+            transition: all 0.4s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 18px 40px rgba(206, 170, 95, 0.28);
+            transform: translateY(-3px) scale(1.01) !important;
+        }
+
+        .card:hover::before {
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
         }
 
         .card.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
-        /* =========================================
-           NUEVO: ADORNOS DE FLORES TIPO LIANAS 
-           ========================================= */
+        /* Adornos de flores tipo lianas */
         .liana {
             position: absolute;
             width: 120px;
-            /* Tamaño de la liana, ajústalo si es muy grande */
             z-index: 10;
             pointer-events: none;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+            opacity: 0.85;
+        }
+
+        .card.visible .liana {
+            opacity: 1;
         }
 
         .liana-top {
-            top: -25px;
-            left: -25px;
+            top: -28px;
+            left: -28px;
             transform: rotate(0deg);
-            /* Ajusta los grados si necesitas rotarla */
+            animation: lianaFloat 4s ease-in-out infinite alternate;
         }
 
         .liana-bottom {
-            bottom: -25px;
-            right: -25px;
+            bottom: -28px;
+            right: -28px;
             transform: rotate(180deg);
-            /* Voltea la liana para la esquina inferior */
+            animation: lianaFloat 4s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes lianaFloat {
+            0%   { filter: drop-shadow(0 0 0px rgba(206,170,95,0)); }
+            100% { filter: drop-shadow(0 0 8px rgba(206,170,95,0.5)); }
         }
 
         /* Tipografías */
@@ -112,6 +150,12 @@
             font-size: 3.5rem;
             margin: 15px 0;
             color: var(--gold);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { text-shadow: 0 0 8px rgba(206,170,95,0.3); }
+            50%       { text-shadow: 0 0 20px rgba(206,170,95,0.7), 0 0 40px rgba(206,170,95,0.3); }
         }
 
         h2 {
@@ -127,6 +171,35 @@
             text-transform: uppercase;
         }
 
+        /* Divisor dorado animado */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 8px auto 16px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            max-width: 60px;
+        }
+
+        .divider i {
+            color: var(--gold);
+            font-size: 0.6rem;
+            animation: spin 8s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
         /* Botones con microanimaciones */
         .btn {
             display: inline-block;
@@ -139,37 +212,44 @@
             font-family: 'Cinzel', serif;
             font-weight: bold;
             margin-top: 15px;
-            transition: all 0.3s;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
             overflow: hidden;
             z-index: 5;
         }
 
-        .btn:hover {
-            background-color: var(--text-dark);
-            color: var(--white);
-            transform: scale(1.05);
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--text-dark);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.35s ease;
+            z-index: -1;
+            border-radius: 25px;
         }
+
+        .btn:hover::after { transform: scaleX(1); }
+        .btn:hover {
+            color: var(--white);
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 8px 20px rgba(140, 74, 92, 0.35);
+        }
+
+        .btn:active { transform: scale(0.97); }
 
         .btn-pulse {
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(140, 74, 92, 0.4);
-            }
-
-            70% {
-                box-shadow: 0 0 0 10px rgba(140, 74, 92, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(140, 74, 92, 0);
-            }
+            0%   { box-shadow: 0 0 0 0 rgba(140, 74, 92, 0.4); }
+            70%  { box-shadow: 0 0 0 10px rgba(140, 74, 92, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(140, 74, 92, 0); }
         }
 
-        /* Elementos específicos */
+        /* Foto circular con animación de entrada */
         .photo-circle {
             width: 150px;
             height: 150px;
@@ -177,22 +257,56 @@
             border: 3px solid var(--gold);
             margin: 20px auto;
             background-color: #f0f0f0;
-            background-image: url('D:\DATOS\Desktop\Invitacion Luciana\Luciana.png');
-            /* <-- PON AQUÍ LA FOTO DE LA QUINCEAÑERA */
+            background-image: url('Luciana.png');
             background-size: cover;
             background-position: center;
             position: relative;
             z-index: 5;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        box-shadow 0.5s ease;
+            animation: photoEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
         }
 
+        @keyframes photoEntrance {
+            0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg);  opacity: 1; }
+        }
+
+        .photo-circle:hover {
+            transform: scale(1.06) rotate(2deg);
+            box-shadow: 0 0 0 6px rgba(206,170,95,0.25), 0 12px 30px rgba(206,170,95,0.4);
+        }
+
+        /* Anillo exterior giratorio */
+        .photo-ring {
+            width: 166px;
+            height: 166px;
+            border-radius: 50%;
+            border: 2px dashed rgba(206,170,95,0.5);
+            margin: 0 auto -158px;
+            position: relative;
+            z-index: 4;
+            animation: ringRotate 12s linear infinite;
+        }
+
+        @keyframes ringRotate {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* Fecha grande */
         .date-number {
             font-family: 'Cinzel', serif;
             font-size: 4rem;
             color: var(--gold);
             line-height: 1;
             margin: 10px 0;
+            transition: transform 0.3s ease;
         }
 
+        .date-number:hover { transform: scale(1.1); }
+
+        /* Countdown */
         .countdown-container {
             display: flex;
             justify-content: center;
@@ -202,6 +316,16 @@
 
         .time-box {
             text-align: center;
+            background: linear-gradient(135deg, #fff8f0, #fff3f6);
+            border: 1px solid rgba(206,170,95,0.4);
+            border-radius: 12px;
+            padding: 10px 14px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .time-box:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(206,170,95,0.3);
         }
 
         .time-box span {
@@ -209,6 +333,7 @@
             font-family: 'Cinzel', serif;
             font-size: 2rem;
             color: var(--text-dark);
+            transition: color 0.2s ease;
         }
 
         .time-box p {
@@ -216,6 +341,7 @@
             margin: 0;
         }
 
+        /* Dress code */
         .dress-code-icons {
             display: flex;
             justify-content: center;
@@ -224,6 +350,13 @@
             font-size: 2.5rem;
             color: var(--text-dark);
         }
+
+        .dress-code-icons div {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: default;
+        }
+
+        .dress-code-icons div:hover { transform: scale(1.2) translateY(-5px); }
 
         .color-palette {
             display: flex;
@@ -237,23 +370,20 @@
             height: 30px;
             border-radius: 50%;
             border: 1px solid var(--gold);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        box-shadow 0.35s ease;
         }
 
-        .c-pink {
-            background-color: #fcd5ce;
+        .color-circle:hover {
+            transform: scale(1.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        .c-white {
-            background-color: #ffffff;
-        }
+        .c-pink   { background-color: #fcd5ce; }
+        .c-white  { background-color: #ffffff; }
+        .c-purple { background-color: #e8dff5; }
 
-        .c-purple {
-            background-color: #e8dff5;
-        }
-
-        /* =========================================
-           NUEVO: ESTILO PARA LA FOTO DEL QR 
-           ========================================= */
+        /* QR */
         .qr-image {
             width: 160px;
             height: 160px;
@@ -265,6 +395,50 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             position: relative;
             z-index: 5;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        box-shadow 0.4s ease;
+        }
+
+        .qr-image:hover {
+            transform: scale(1.08) rotate(1deg);
+            box-shadow: 0 10px 30px rgba(206,170,95,0.4);
+        }
+
+        /* Icono de whatsapp con rebote */
+        .icon-bounce {
+            display: inline-block;
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-6px); }
+        }
+
+        /* Fade in de elementos internos al hacerse visible la card */
+        .card.visible .fade-in-item {
+            animation: fadeInUp 0.7s ease both;
+        }
+
+        .card.visible .fade-in-item:nth-child(1) { animation-delay: 0.1s; }
+        .card.visible .fade-in-item:nth-child(2) { animation-delay: 0.2s; }
+        .card.visible .fade-in-item:nth-child(3) { animation-delay: 0.3s; }
+        .card.visible .fade-in-item:nth-child(4) { animation-delay: 0.4s; }
+        .card.visible .fade-in-item:nth-child(5) { animation-delay: 0.5s; }
+        .card.visible .fade-in-item:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Números del countdown con cambio suave */
+        .flip-num {
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .flip-num.changing {
+            transform: translateY(-10px);
+            opacity: 0;
         }
     </style>
 </head>
@@ -273,64 +447,71 @@
 
     <!-- PORTADA -->
     <div class="card visible">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+        <img src="Liana.png" class="liana liana-top" alt="">
+        <img src="Liana.png" class="liana liana-bottom" alt="">
 
-        <p class="title-small">MIS XV AÑOS</p>
-        <h1>Luciana</h1>
-        <h1>Orihuela Roca</h1>
+        <p class="title-small fade-in-item">MIS XV AÑOS</p>
+        <h1 class="fade-in-item">Luciana</h1>
+        <h1 class="fade-in-item">Orihuela Roca</h1>
+
+        <div class="divider fade-in-item"><i class="fas fa-star"></i></div>
+
+        <div class="photo-ring"></div>
         <div class="photo-circle"></div>
     </div>
 
     <!-- PADRES -->
     <div class="card">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+        <img src="Liana.png" class="liana liana-top" alt="">
+        <img src="Liana.png" class="liana liana-bottom" alt="">
 
-        <p style="position: relative; z-index: 5;">Hoy queda en el recuerdo mi niñez, pero hoy renazco para vivir el
+        <p class="fade-in-item" style="position: relative; z-index: 5;">Hoy queda en el recuerdo mi niñez, pero hoy renazco para vivir el
             momento más feliz de mi vida: mi adolescencia.</p>
-        <p style="position: relative; z-index: 5;">Con el cariño de mis padres:</p>
-        <h2 style="font-size: 2rem; margin-top: 20px; position: relative; z-index: 5;">Everty Orihuela Roca</h2>
-        <h2 style="font-size: 2rem; position: relative; z-index: 5;">& </h2>
-        <h2 style="font-size: 2rem; position: relative; z-index: 5;">Patricia Roca Flores</h2>
-        <p style="margin-top: 20px; position: relative; z-index: 5;">Quisiera que estés junto a mi para que compartamos
+        <div class="divider fade-in-item"><i class="fas fa-heart"></i></div>
+        <p class="fade-in-item" style="position: relative; z-index: 5;">Con el cariño de mis padres:</p>
+        <h2 class="fade-in-item" style="font-size: 2rem; margin-top: 20px; position: relative; z-index: 5;">Everty Orihuela Roca</h2>
+        <h2 class="fade-in-item" style="font-size: 2rem; position: relative; z-index: 5;">&amp; </h2>
+        <h2 class="fade-in-item" style="font-size: 2rem; position: relative; z-index: 5;">Patricia Roca Flores</h2>
+        <p class="fade-in-item" style="margin-top: 20px; position: relative; z-index: 5;">Quisiera que estés junto a mi para que compartamos
             mis 15 años</p>
     </div>
 
     <!-- RECEPCIÓN -->
     <div class="card">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+        <img src="Liana.png" class="liana liana-top" alt="">
+        <img src="Liana.png" class="liana liana-bottom" alt="">
 
-        <h2 class="script-text">Recepción</h2>
-        <p>DOMINGO</p>
-        <div class="date-number">05</div>
-        <p>DE JULIO</p>
-        <p style="margin-top:20px; font-weight: bold; color: var(--gold); font-size: 1.2rem;">19:30 Hrs.</p>
-        <p style="margin-top:10px;">MI DOMICILIO PARTICULAR</p>
+        <h2 class="script-text fade-in-item">Recepción</h2>
+        <div class="divider fade-in-item"><i class="fas fa-star"></i></div>
+        <p class="fade-in-item">DOMINGO</p>
+        <div class="date-number fade-in-item">05</div>
+        <p class="fade-in-item">DE JULIO</p>
+        <p class="fade-in-item" style="margin-top:20px; font-weight: bold; color: var(--gold); font-size: 1.2rem;">19:30 Hrs.</p>
+        <p class="fade-in-item" style="margin-top:10px;">MI DOMICILIO PARTICULAR</p>
 
-        <a href="https://maps.app.goo.gl/MtyRykohnLVXHeMm7" target="_blank" class="btn btn-pulse">
+        <a href="https://maps.app.goo.gl/MtyRykohnLVXHeMm7" target="_blank" class="btn btn-pulse fade-in-item">
             <i class="fas fa-map-marker-alt"></i> Ver Ubicación
         </a>
     </div>
 
     <!-- CUENTA REGRESIVA -->
     <div class="card">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+        <img src="Liana.png" class="liana liana-top" alt="">
+        <img src="Liana.png" class="liana liana-bottom" alt="">
 
-        <h2 class="script-text">Faltan</h2>
-        <div class="countdown-container">
-            <div class="time-box"><span id="days">00</span>
+        <h2 class="script-text fade-in-item">Faltan</h2>
+        <div class="divider fade-in-item"><i class="fas fa-star"></i></div>
+        <div class="countdown-container fade-in-item">
+            <div class="time-box"><span id="days" class="flip-num">00</span>
                 <p>DÍAS</p>
             </div>
-            <div class="time-box"><span id="hours">00</span>
+            <div class="time-box"><span id="hours" class="flip-num">00</span>
                 <p>HORAS</p>
             </div>
-            <div class="time-box"><span id="mins">00</span>
+            <div class="time-box"><span id="mins" class="flip-num">00</span>
                 <p>MINUTOS</p>
             </div>
-            <div class="time-box"><span id="secs">00</span>
+            <div class="time-box"><span id="secs" class="flip-num">00</span>
                 <p>SEGUNDOS</p>
             </div>
         </div>
@@ -338,12 +519,13 @@
 
     <!-- VESTIMENTA -->
     <div class="card">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+        <img src="Liana.png" class="liana liana-top" alt="">
+        <img src="Liana.png" class="liana liana-bottom" alt="">
 
-        <h2 class="script-text">Código de Vestimenta</h2>
-        <p class="title-small">FORMAL</p>
-        <div class="dress-code-icons">
+        <h2 class="script-text fade-in-item">Código de Vestimenta</h2>
+        <div class="divider fade-in-item"><i class="fas fa-star"></i></div>
+        <p class="title-small fade-in-item">FORMAL</p>
+        <div class="dress-code-icons fade-in-item">
             <div><i class="fas fa-user-tie"></i>
                 <p style="font-size: 0.6rem; margin-top:5px;">GUAPOS</p>
             </div>
@@ -351,8 +533,8 @@
                 <p style="font-size: 0.6rem; margin-top:5px;">DIVINAS</p>
             </div>
         </div>
-        <p style="font-size: 0.7rem;">COLORES RESERVADOS PARA LA QUINCEAÑERA:</p>
-        <div class="color-palette">
+        <p class="fade-in-item" style="font-size: 0.7rem;">COLORES RESERVADOS PARA LA QUINCEAÑERA:</p>
+        <div class="color-palette fade-in-item">
             <div class="color-circle c-pink"></div>
             <div class="color-circle c-white"></div>
             <div class="color-circle c-purple"></div>
@@ -361,57 +543,95 @@
 
     <!-- SUGERENCIA DE REGALO CON FOTO QR -->
     <div class="card">
-        <img src="D:\DATOS\Desktop\Invitacion Luciana\Liana.png" class="liana liana-top" alt="">
-        <img src="D:\DATOS\Desktop\Invitacion Luciana\Liana.png" class="liana liana-bottom" alt="">
+        <img src="Liana.png" class="liana liana-top" alt="">
+        <img src="Liana.png" class="liana liana-bottom" alt="">
 
-        <i class="fas fa-gift"
-            style="font-size: 2rem; color: var(--gold); margin-bottom: 10px; position: relative; z-index: 5;"></i>
-        <h2 class="script-text" style="position: relative; z-index: 5;">Sugerencia de regalo</h2>
-        <p style="position: relative; z-index: 5;">Tu presencia es mi mejor regalo, pero si deseas darme un obsequio
+        <i class="fas fa-gift fade-in-item"
+            style="font-size: 2rem; color: var(--gold); margin-bottom: 10px; position: relative; z-index: 5; display:block;"></i>
+        <h2 class="script-text fade-in-item" style="position: relative; z-index: 5;">Sugerencia de regalo</h2>
+        <div class="divider fade-in-item"><i class="fas fa-star"></i></div>
+        <p class="fade-in-item" style="position: relative; z-index: 5;">Tu presencia es mi mejor regalo, pero si deseas darme un obsequio
             contaremos con lluvia de sobres y transferencia QR.</p>
 
-        <!-- AQUÍ VA TU IMAGEN DEL QR -->
-        <img src="D:\DATOS\Desktop\Invitacion Luciana\Qr.png" alt="Código QR para regalos" class="qr-image">
+        <img src="Qr.png" alt="Código QR para regalos" class="qr-image fade-in-item">
     </div>
 
     <!-- CONFIRMACIÓN -->
     <div class="card">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-top" alt="">
-        <img src="URL_DE_TU_LIANA_TRANSPARENTE.png" class="liana liana-bottom" alt="">
+        <img src="Liana.png" class="liana liana-top" alt="">
+        <img src="Liana.png" class="liana liana-bottom" alt="">
 
-        <i class="fab fa-whatsapp"
-            style="font-size: 2.5rem; color: var(--gold); margin-bottom: 10px; position: relative; z-index: 5;"></i>
-        <h2 class="script-text" style="position: relative; z-index: 5;">Confirmación</h2>
-        <p style="position: relative; z-index: 5;">de asistencia</p>
+        <span class="icon-bounce fade-in-item" style="display:block; margin-bottom:10px; position:relative; z-index:5;">
+            <i class="fab fa-whatsapp" style="font-size: 2.5rem; color: var(--gold);"></i>
+        </span>
+        <h2 class="script-text fade-in-item" style="position: relative; z-index: 5;">Confirmación</h2>
+        <div class="divider fade-in-item"><i class="fas fa-star"></i></div>
+        <p class="fade-in-item" style="position: relative; z-index: 5;">de asistencia</p>
         <a href="https://wa.me/59176861386?text=¡Hola!%20Confirmo%20mi%20asistencia%20a%20los%20XV%20de%20Luciana"
-            target="_blank" class="btn btn-pulse" style="margin-bottom: 20px;">
+            target="_blank" class="btn btn-pulse fade-in-item" style="margin-bottom: 20px;">
             CONFIRMAR
         </a>
-        <p style="color: var(--gold); font-weight: bold; position: relative; z-index: 5;">TU PRESENCIA HARÁ MI DÍA MÁS
+        <p class="fade-in-item" style="color: var(--gold); font-weight: bold; position: relative; z-index: 5;">TU PRESENCIA HARÁ MI DÍA MÁS
             ESPECIAL</p>
     </div>
 
     <script>
+        // --- Partículas flotantes ---
+        const colors = ['#fcd5ce','#e8dff5','#ceaa5f','#f4a7b9','#ffffff'];
+        for (let i = 0; i < 18; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const size = Math.random() * 10 + 4;
+            p.style.cssText = `
+                width:${size}px; height:${size}px;
+                left:${Math.random() * 100}vw;
+                background:${colors[Math.floor(Math.random() * colors.length)]};
+                animation-duration:${Math.random() * 12 + 8}s;
+                animation-delay:${Math.random() * 8}s;
+            `;
+            document.body.appendChild(p);
+        }
+
+        // --- Intersection Observer para cards ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                 }
             });
-        });
+        }, { threshold: 0.15 });
+
         document.querySelectorAll('.card').forEach(card => observer.observe(card));
 
+        // --- Countdown con animación de flip ---
         const countDownDate = new Date("Jul 5, 2026 19:30:00").getTime();
+        const ids = ['days','hours','mins','secs'];
+        const prevVals = { days:'--', hours:'--', mins:'--', secs:'--' };
+
+        function animateNum(id, val) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (prevVals[id] !== val) {
+                el.classList.add('changing');
+                setTimeout(() => {
+                    el.innerText = val;
+                    el.classList.remove('changing');
+                }, 200);
+                prevVals[id] = val;
+            }
+        }
 
         setInterval(function () {
             const now = new Date().getTime();
             const distance = countDownDate - now;
 
             if (distance > 0) {
-                document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-                document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-                document.getElementById("mins").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-                document.getElementById("secs").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                animateNum('days',  Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0'));
+                animateNum('hours', Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0'));
+                animateNum('mins',  Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0'));
+                animateNum('secs',  Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0'));
+            } else {
+                ids.forEach(id => animateNum(id, '00'));
             }
         }, 1000);
     </script>
